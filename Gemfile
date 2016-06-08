@@ -20,6 +20,7 @@ source 'https://rubygems.org'
  gem 'bootstrap-sass'
  gem 'figaro'
  gem 'pry'
+ gem 'devise'
 
  group :development, :test do
  gem 'byebug'

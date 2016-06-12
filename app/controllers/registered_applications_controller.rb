@@ -1,7 +1,7 @@
 class RegisteredApplicationsController < ApplicationController
 
   def index
-    @registered_applications = RegisteredApplication.visible_to current_user
+    @registered_applications = current_user.registered_applications
   end
 
   def show
@@ -13,15 +13,15 @@ class RegisteredApplicationsController < ApplicationController
   end
 
   def create
-    @registered_application.user = current_user
     @registered_application = RegisteredApplication.new(registered_application_params)
+    @registered_application.user = current_user
 
     if @registered_application.save
       flash[:notice] = "Application registered successfully"
-      redirect_to @registered_application
+      redirect_to registered_applications_path
     else
       flash[:alert] = "Failed to register Application"
-      redirect_to registered_applications_path
+      redirect_to :new
     end
   end
 
@@ -33,8 +33,8 @@ class RegisteredApplicationsController < ApplicationController
     @registered_application = RegisteredApplication.find(params[:id])
 
     if @registered_application.update_attributes(registered_application_params)
-      flash[:notice] = "Successfully updated \"#{registered_application.name}\"."
-      redirect_to @registered_application
+      flash[:notice] = "Successfully updated \"#{@registered_application.name}\"."
+      redirect_to registered_applications_path
     else
       flash[:error] = "failed to update Application"
       render :edit
@@ -45,7 +45,7 @@ class RegisteredApplicationsController < ApplicationController
     @registered_application = RegisteredApplication.find(params[:id])
 
     if @registered_application.destroy
-      flash[:notice] = "\"#{registered_application.name}\" deleted successfully"
+      flash[:notice] = "\"#{@registered_application.name}\" deleted successfully"
       redirect_to registered_applications_path
     else
       flash[:alert] = "Failed to delete Application"

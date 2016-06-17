@@ -1,4 +1,5 @@
 class RegisteredApplicationsController < ApplicationController
+  before_action :require_sign_in
 
   def index
     @registered_applications = current_user.registered_applications
@@ -58,5 +59,12 @@ class RegisteredApplicationsController < ApplicationController
 
   def registered_application_params
     params.require(:registered_application).permit(:name, :url)
+  end
+
+  def require_sign_in
+    unless current_user
+      flash[:alert] = "You must be logged in to access apps"
+      redirect_to root_path
+    end
   end
 end
